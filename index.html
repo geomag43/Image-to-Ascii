@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset ="UTF-8">
+    <meta name ="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>ASCII art generator</title>
+    
+</head>
+<body>
+
+    <h1>Image to ASCII converter</h1>
+
+    <div class="main-layout">
+        <div class="controls-panel">
+        <h1>Controls</h1>
+            <div class = "file-input">
+                <div>
+                     <input type='file' id="image-loader" accept="Image/*">
+                </div>    
+                <div>
+                     <canvas id="image-canvas"></canvas>
+                </div>            
+            </div>
+            <table id="selector">
+                <tr>
+                    <td>Negative: </td>
+                    <td>
+                        <input type="checkbox" id="negative-checkbox" checked>
+                </tr>
+                <tr>
+                    <td>Max width:</td>
+                    <td>
+                        <select id="scale-mode" name="max-width">
+                            <option value="pixel-perfect">Pixel perfect</option>
+                            <option value="auto" selected>Auto</option>
+                            <option value="manual">Manual</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Width: </td>
+                    <td>
+                           <input type = "range" id="line-width-slider" min="5" max="1000" value="135" disabled>
+                    </td>
+                    <td>
+                        <input type="number" class = "num" id="line-width-input" value="135" min="1" max = "1000" select="12" disabled>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Symbols map:</td>
+                    <td>
+                        <select id="symbols-map-select" name="symbols-map">
+                            <option value="1">1 shade</option>
+                            <option value="2">2 shades</option>
+                            <option value="4">4 shades</option>
+                            <option value="8">8 shades</option>
+                            <option value="16">16 shades</option>
+                            <option value="letters">Letters only</option>
+                            <option value="numbers">Numbers only</option>
+                            <option value="dots" selected>Dots and dashes</option>
+                            <option value="blocks">Block characters</option>
+                            <option value="blocks-alternate">Alternate block characters</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </td>
+                    <td id="symbols-preview"></td>
+                </tr>
+                <tr>
+                    <td>
+                        Line height: 
+                    </td>
+                    <td>
+                           <input type = "range" id="line-height-slider" min="4" max="32" value="12" step = "0.5">
+                    </td>
+                    <td>
+                        <input type="number" class = "num" id="line-height-input" value="5" min="1" max = "99" select="12">
+                    </td>
+                <tr>
+                    <td>
+                        Vertical Stretch: 
+                    </td>
+                    <td>
+                           <input type = "range" id="vertical-stretch-slider" min="0.01" max="2" value="0.55" step="0.01">
+                    </td>
+                    <td>
+                        <input type="number"  class = "num"  id="vertical-stretch-input" value="0.38" min="0.01" max = "2"  step="0.01">
+                    </td>
+                </tr>
+                </tr>
+            </table>
+            <button class="btn" id = "generate-button" type = "submit" >
+                <img src="start.png" alt="Rocket icon" title="Generate image">
+            </button>
+            <h1>Presets</h1>
+            <div class = "preset" id="presets-container">
+                <div>
+                    <button class="btn preset-btn" id= "preset-pastebin" type = "submit" >
+                    <img src="pastebin.png" alt="Pastebin icon" title="Pastebin preset">
+                    Pastebin
+                </div>
+                <div>
+                    <button class="btn preset-btn" id= "preset-reddit" type = "submit" >
+                    <img src="pastebin.png" alt="Reddit icon" title="Pastebin preset">
+                    Reddit
+                </div>
+                <div>
+                    <button class="btn preset-btn" id= "preset-wykop" type = "submit" >
+                    <img src="pastebin.png" alt="Wykop icon" title="Pastebin preset">
+                    Wykop
+                </div>
+                <div>
+                    <button class="btn preset-btn" id= "preset-facebook" type = "submit" >
+                    <img src="pastebin.png" alt="Facebook icon" title="Facebook preset">
+                    Facebook
+                </div>
+                <div>
+                    <button class="btn preset-btn" id= "preset-twitter" type = "submit" >
+                    <img src="pastebin.png" alt="Twitter icon" title="Twitter preset">
+                    Twitter
+                </div>
+                <div>
+                    <button class="btn preset-btn" id= "preset-BlueSky" type = "submit" >
+                    <img src="pastebin.png" alt="Bluesky icon" title="BlueSky preset">
+                    BlueSky
+                </div>
+            </div>
+        </div>
+
+        <div class="output-panel">
+            <h1>Results:</h1>
+            <pre id="ascii-output"></pre>
+            <button class="btn" id = "copy-button" type = "submit">
+                <img src="copy.png" alt="Copy icon" title="Copy to clipboard">
+            </button>
+        </div>
+
+    </div> <script src="script.js"></script>
+</body>
+</html> 

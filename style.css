@@ -1,0 +1,243 @@
+body {
+    font-family: 'Calibri', Courier, monospace;
+    color: #ebc856;
+    text-align: center;
+    padding: 2em;
+
+    /* --- Animated Gradient --- */
+    /* Define the gradient with 4 colors */
+    background: linear-gradient(150deg,
+            #2c4696,
+            #22356e,
+            #131e3d,
+            #0b1122);
+    /* Set the background size to be huge */
+    background-size: 4000% 4000%;
+    /* Apply the animation */
+    animation: gradientAnimation 15s ease infinite;
+    /* Ensure content is scrollable even on small screens */
+    min-height: 100vh;
+}
+
+/* Define the keyframes for the animation */
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+
+
+
+
+#ascii-output {
+    color: #ebc856;
+    line-height: 1;
+    font-family: "consolas", monospace;
+    font-size: 13px;
+    /* Small font to fit more art */
+  
+    /* Squish lines together vertically */
+    letter-spacing: 1;
+}
+
+
+#sizer{
+    text-align: center;
+}
+
+
+/* This CSS creates the side-by-side layout */
+        .main-layout {
+            display: flex; /* Arranges children (controls and output) in a row */
+            flex-wrap: wrap; /* Allows items to wrap on small screens */
+            gap: 20px;       /* Adds spacing between the left and right panels */
+        }
+
+        /* Style for the left panel */
+        .controls-panel {
+            flex: 1; /* Allows the panel to grow */
+            min-width: 300px; /* Ensures it doesn't get too small */
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: #0b1122 0px 14px 18px 0px;
+
+        }
+
+        /* Style for the right panel */
+        .output-panel {
+            flex: 2; /* Allows this panel to grow, taking up more space */
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: #0b1122 0px 14px 18px 0px;
+        }
+
+        /* Style for your controls table to make it look neater */
+        #selector {
+            width: 100%;
+            border-collapse: collapse; /* Removes double borders */
+            margin: 15px 0;
+        }
+
+        #selector td {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+        }
+
+        #selector tr:last-child td {
+            border-bottom: none; /* Removes border from the last row */
+        }
+        
+        #selector select {
+            width: 100%; /* Makes select boxes fill the cell */
+        }
+
+        /* Give the canvas a visible style */
+        #image-canvas {
+            border: 1px solid black;
+            
+            /* You'll likely set width/height with JavaScript */
+            max-width: 100%; 
+        }
+
+        /* Style for the output <pre> tag */
+
+
+        /* Make the file input and button look consistent */
+        #image-loader, #generate-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box; /* Ensures padding doesn't break width */
+            margin-bottom: 10px;
+        }
+
+#line-height-slider{
+    width: 100%;
+    cursor: grab;
+}
+
+#line-width-slider{
+    width: 100%;
+    cursor: grab;
+}
+
+#vertical-stretch-slider{
+    width: 100%;
+    cursor: grab;
+}
+
+.btn{
+    background-color: #0d2055;
+    color: rgb(235, 200, 86);
+    font-family: 'Calibri', Courier, monospace;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    box-shadow: #0b1122 0px 4px 8px 0px;
+    padding: 8px;
+    height: 50px;
+    width: 100px;
+    border-radius: 20px;
+    margin-top: 10px;
+}
+
+.btn:hover{
+    background-color: #22356e;
+    transform: translateY(-3px);
+    
+}
+
+.btn:active{
+    background-color: #131e3d;
+    transform: scale(0.97)
+}
+
+#generate-button{
+   width: 70px;
+   height: 70px;
+}   
+
+#generate-button img{
+    width: 70%;
+    height: 70%;
+    padding-top: 5px;
+}
+
+#copy-button{
+   width: 50px;
+   height: 50px;
+   margin-bottom: 30px;
+}
+
+#copy-button img{
+    width: 70%;
+    height: 70%;
+    padding-top: 5px;
+}
+
+
+
+.num {
+    width: 50%;
+}
+
+.file-input {
+  display: flex;
+  align-items: center; /* Optional: This vertically centers the items */
+  justify-content: center;;
+  gap: 20px;          /* Optional: This adds some space between them */
+}
+
+.preset{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    padding-left: 5%;
+    padding-right: 5%;
+    gap : 20px;
+}
+
+.btn{
+    background-color: #0d2055;
+    color: rgb(235, 200, 86);
+    font-family: 'Calibri', Courier, monospace;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    box-shadow: #0b1122 0px 4px 8px 0px;
+    padding: 8px;
+    height: 50px;
+    width: 100px;
+    border-radius: 20px;
+    margin-top: 10px;
+}
+
+
+.preset-btn{
+    font-size: 17px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7%;
+    width: 150px;
+    height: 70px;
+}
+.preset-btn img{
+    width: 40%;
+    height: 80%;
+    padding-top: 5px;
+}
+
