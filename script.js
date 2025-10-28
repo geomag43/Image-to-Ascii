@@ -1,3 +1,4 @@
+// --- Get all the DOM elements ---
 const imageLoader = document.getElementById('image-loader');
 const canvas = document.getElementById('image-canvas');
 const ctx = canvas.getContext('2d');
@@ -15,7 +16,9 @@ const lineWidthSlider = document.getElementById('line-width-slider');
 const lineWidthInput = document.getElementById('line-width-input');
 
 
-// Ramps go from Least (index 0) to Most obstructive (index N-1)
+// --- Character maps ---
+// Ramps. Index 0 maps to brightness 0 (black), N-1 maps to brightness 255 (white).
+// 'negative' checkbox will reverse this.
 const CHAR_MAPS = {
     '1': [' ', '.'],
     '2': [' ', '.', '#'],
@@ -27,42 +30,44 @@ const CHAR_MAPS = {
     'dots': [' ', '_', ':', ';', '-', '.', '|', '=', '+'],
     'blocks': [' ', '░', '▒', '▓', '█'],
     'blocks-alternate': [' ', '▝', '▅', '▚', '▙', '▉'],
-    'custom': [' ', '▢', '▣', '▨', '▩'] // Placeholder
+    'custom': [' ', '▢', '▣', '▨', '▩'] // temp
 }
 
 negativeCheckbox.addEventListener('change', () => {
-    // Update the preview
+    // update the little text preview
     updateSymbolsPreview();
-    
-    // Also regenerate the art
+    // just re-run the whole thing
     convertImageToAscii();
 });
 
-// Run it once on page load to set the initial preview
+// Updates the " . : - = + " preview text
 function updateSymbolsPreview() {
     const selectedKey = symbolsMapSelect.value;
 
-    // Create a NEW COPY of the array
+    // IMPORTANT: make a copy, don't change the original CHAR_MAPS
     let charArray = [...CHAR_MAPS[selectedKey]];
 
-    // Check the box and reverse the COPY if needed
+    // flip it if 'negative' is checked
     if (negativeCheckbox.checked) {
         charArray.reverse();
     }
 
-    // Join the copy and set the preview
+    // just join with spaces for the preview text
     symbolsPreview.textContent = charArray.join(' ');
 }
 
-// This variable will hold our image so the button's function can access it
+// run once on load to show the default
+updateSymbolsPreview();
+
+// global to hold the loaded image data
 let loadedImage = null;
 
 // --- Step 1: File Loader ---
-// This listener just pre-loads the image.
+// This just pre-loads the image into the `loadedImage` var.
 imageLoader.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (!file) {
-        return;
+        return; // no file selected
     }
 
     const reader = new FileReader();
@@ -70,12 +75,12 @@ imageLoader.addEventListener('change', (e) => {
     reader.onload = (event) => {
         const img = new Image();
         img.onload = () => {
-            console.log('Image pre-loaded. Ready to generate.');
+            console.log('Image pre-loaded.');
 
-            // We just save the image. Conversion happens on button click.
+            // save it to the global var
             loadedImage = img;
 
-            // Enable the button now that an image is loaded
+            // now they can click the button
             generateButton.disabled = false;
         };
         img.src = event.target.result;
@@ -86,34 +91,32 @@ imageLoader.addEventListener('change', (e) => {
 
 
 // --- Step 2: Button Click ---
-// This listener runs the conversion when the button is clicked.
+// This just kicks off the main function
 generateButton.addEventListener('click', () => {
-    // Call our new conversion function
     convertImageToAscii();
 });
 
+// Show/hide the manual width slider
 scaleModeSelect.addEventListener('change', () => {
     const mode = scaleModeSelect.value;
     
-    if (mode === 'manual') {
-        lineWidthInput.disabled = false;
-        lineWidthSlider.disabled = false;
-    } else {
-        lineWidthInput.disabled = true;
-        lineWidthSlider.disabled = true;
-    }
+    // only enable the manual width slider/input if mode is 'manual'
+    const isManual = (mode === 'manual');
+    lineWidthInput.disabled = !isManual;
+    lineWidthSlider.disabled = !isManual;
 
-    // Optional: Regenerate if an image is already loaded
+    // re-run if we have an image
     if (loadedImage) {
         convertImageToAscii();
     }
 });
-// --- Step 3: The Conversion Function ---
-// All your existing logic moves into this function.
+
+// --- Step 3: The Main Conversion Function ---
+// This does all the real work.
 function convertImageToAscii() {
-    // Check if an image has been loaded first
+    // safety check, don't run if no image
     if (!loadedImage) {
-        alert('Please upload an image first!');
+        // alert('Please upload an image first!'); // too annoying
         return;
     }
 
@@ -122,131 +125,128 @@ function convertImageToAscii() {
     const scaleMode = scaleModeSelect.value;
 
     if (scaleMode === 'pixel-perfect') {
+        // 1-to-1 pixels
         newWidth = loadedImage.width;
         newHeight = loadedImage.height;
         console.log("Scaling: Pixel Perfect");
 
     } else if (scaleMode === 'auto') {
-        // 'auto' mode uses a fixed default width
-        const MAX_WIDTH = 135; // Use a fixed default
+        // 'auto' = use a fixed width
+        const MAX_WIDTH = 135; // my default
         const scaleFactor = loadedImage.width / MAX_WIDTH;
         newWidth = Math.floor(loadedImage.width / scaleFactor);
-        newHeight = Math.floor(loadedImage.height / scaleFactor * verticalStretchSlider.value);
+        newHeight = Math.floor(loadedImage.height / scaleFactor * verticalStretchSlider.value); // apply stretch
         console.log("Scaling: Auto");
 
     } else if (scaleMode === 'manual') {
-        // 'manual' mode reads from the (now-enabled) inputs
+        // 'manual' = read from slider
         let MAX_WIDTH = parseInt(lineWidthInput.value, 10); 
         if (isNaN(MAX_WIDTH) || MAX_WIDTH < 1) {
-            MAX_WIDTH = 235; // Fallback to a default
+            MAX_WIDTH = 235; // fallback
         }
 
         const scaleFactor = loadedImage.width / MAX_WIDTH;
         newWidth = Math.floor(loadedImage.width / scaleFactor);
-        newHeight = Math.floor(loadedImage.height / scaleFactor * verticalStretchSlider.value);
+        newHeight = Math.floor(loadedImage.height / scaleFactor * verticalStretchSlider.value); // apply stretch
         console.log("Scaling: Manual");
     }
 
-    // Set canvas to the new calculated size
+    // resize canvas to our new size
     canvas.width = newWidth;
     canvas.height = newHeight;
 
-    // Draw the scaled image
+    // draw the image (scaled) onto the tiny canvas
     ctx.drawImage(loadedImage, 0, 0, newWidth, newHeight);
-    console.log(`Image scaled and drawn to canvas at ${newWidth}x${newHeight}`);
+    console.log(`Image drawn to canvas at ${newWidth}x${newHeight}`);
 
     // --- PIXEL-TO-ASCII LOGIC ---
 
-    // Get the selected character ramp
+    // get the right ramp
     const selectedKey = symbolsMapSelect.value;
 
-    // Create a COPY of the ramp
+    // !! MUST make a copy, don't modify the original
     let charRamp = [...CHAR_MAPS[selectedKey]];
 
-    // Reverse the ramp if 'negative' is checked
+    // flip it if needed
     if (negativeCheckbox.checked) {
         charRamp.reverse();
     }
 
     const rampLength = charRamp.length;
 
+    // pull all pixel data from the canvas
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const dataArray = imageData.data;
+    const dataArray = imageData.data; // this is a flat [r,g,b,a, r,g,b,a, ...] array
 
-    let asciiArt = '';
+    let asciiArt = ''; // build the string here
 
+    // loop through 4 bytes at a time (r,g,b,a)
     for (let i = 0; i < dataArray.length; i += 4) {
         const r = dataArray[i];
         const g = dataArray[i + 1];
         const b = dataArray[i + 2];
+        // simple average for brightness. could be fancier (luminosity) but this is fine
         const brightness = (r + g + b) / 3;
 
+        // map brightness (0-255) to an index in our ramp (0-N)
         const charIndex = Math.floor((brightness / 256) * rampLength);
 
+        // add the character to our string
         asciiArt += charRamp[charIndex];
 
-        // Add newline at the end of a row
+        // check if we're at the end of a row
         const x = (i / 4) % canvas.width;
         if (x === canvas.width - 1) {
-            asciiArt += '\n';
+            asciiArt += '\n'; // add newline
         }
     }
 
-    // Set the text content ONCE
+    // Set the text content ONCE. (Don't do it inside the loop, too slow)
     asciiOutput.textContent = asciiArt;
     console.log("ASCII Art Generated!");
 }
 
+// --- All the other listeners ---
+
+// Link line height slider and input
 lineHeightSlider.addEventListener('input', () => {
     let lineHeight = lineHeightSlider.value;
     asciiOutput.style.lineHeight = lineHeight + 'px';
     lineHeightInput.value = lineHeight;
 });
-
 lineHeightInput.addEventListener('input', () => {
     let lineHeight = lineHeightInput.value;
-    if (lineHeight < 1) lineHeight = 1;
+    if (lineHeight < 1) lineHeight = 1; // min 1
     asciiOutput.style.lineHeight = lineHeight + 'px';
     lineHeightSlider.value = lineHeight;
 });
 
+// Link line *width* slider and input (and regen)
 lineWidthSlider.addEventListener('input', () => {
-    // Update the input field to match the slider
-     lineWidthInput.value = lineWidthSlider.value;
-    // Regenerate the ASCII art
-    convertImageToAscii();
+    lineWidthInput.value = lineWidthSlider.value;
+    convertImageToAscii(); // regen
 });
-
 lineWidthInput.addEventListener('input', () => {
-    // Update the slider to match the input field
-     lineWidthSlider.value = lineWidthInput.value;
-    // Regenerate the ASCII art
-    convertImageToAscii();
+    lineWidthSlider.value = lineWidthInput.value;
+    convertImageToAscii(); // regen
 });
 
+// Link vertical stretch slider and input (and regen)
 verticalStretchSlider.addEventListener('input', () => {
     let stretchValue = verticalStretchSlider.value;
     verticalStretchInput.value = stretchValue;
-    convertImageToAscii();
+    convertImageToAscii(); // regen
 });
-
 verticalStretchInput.addEventListener('input', () => {
     let stretchValue = verticalStretchInput.value;
-    // Update the slider to match the input
     verticalStretchSlider.value = stretchValue;
-    // Regenerate the ASCII art
-    convertImageToAscii();
-
+    convertImageToAscii(); // regen
 });
 
+// Symbol map dropdown
 symbolsMapSelect.addEventListener('change', () => {
-    // Update the preview text (e.g., ". : - = + * #")
+    // update the preview text
     updateSymbolsPreview();
-    
-    // Regenerate the ASCII art with the new symbols
-    // This function will automatically check if an image is loaded
+    // regen
     convertImageToAscii();
 });
-
-
-
