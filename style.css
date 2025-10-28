@@ -67,7 +67,7 @@ body {
             flex: 1; /* Allows the panel to grow */
             min-width: 300px; /* Ensures it doesn't get too small */
             padding: 15px;
-            border: 1px solid #ccc;
+            border: 1px solid #507aee;
             border-radius: 8px;
             box-shadow: #0b1122 0px 14px 18px 0px;
 
@@ -77,7 +77,7 @@ body {
         .output-panel {
             flex: 2; /* Allows this panel to grow, taking up more space */
             padding: 15px;
-            border: 1px solid #ccc;
+            border: 1px solid #507aee;
             border-radius: 8px;
             box-shadow: #0b1122 0px 14px 18px 0px;
         }
@@ -104,7 +104,9 @@ body {
 
         /* Give the canvas a visible style */
         #image-canvas {
-            border: 1px solid black;
+            border: 1px solid #507aee;
+            border-radius: 20px;
+            box-shadow: #507aee 0px 0px 8px 0px;
             
             /* You'll likely set width/height with JavaScript */
             max-width: 100%; 
