@@ -13,13 +13,14 @@
 
     <div class="main-layout">
         <div class="controls-panel">
-        <h1>Controls</h1>
+            <div class="subtitle">Controls</div>
             <div class = "file-input">
-                <div>
+                <div class = "image-loader-container">
                      <input type='file' id="image-loader" accept="Image/*">
                 </div>    
-                <div>
-                     <canvas id="image-canvas"></canvas>
+                <div class = "canvas-container">
+                     <canvas  id="image-canvas"></canvas>
+                     <canvas  id="fake-canvas"></canvas>
                 </div>            
             </div>
             <table id="selector">
@@ -41,7 +42,7 @@
                 <tr>
                     <td>Width: </td>
                     <td>
-                           <input type = "range" id="line-width-slider" min="5" max="1000" value="135" disabled>
+                           <input type = "range" id="line-width-slider" min="5" max="400" value="135" disabled>
                     </td>
                     <td>
                         <input type="number" class = "num" id="line-width-input" value="135" min="1" max = "1000" select="12" disabled>
@@ -74,7 +75,7 @@
                            <input type = "range" id="line-height-slider" min="4" max="32" value="12" step = "0.5">
                     </td>
                     <td>
-                        <input type="number" class = "num" id="line-height-input" value="5" min="1" max = "99" select="12">
+                        <input type="number" class = "num" id="line-height-input" value="12" min="1" max = "99" select="12">
                     </td>
                 <tr>
                     <td>
@@ -128,8 +129,13 @@
         </div>
 
         <div class="output-panel">
-            <h1>Results:</h1>
-            <pre id="ascii-output"></pre>
+            <div id="charCounter-container">
+                <pre id="charCount" >Char count: 0</pre>
+            </div>
+            <div class = "subtitle" id="output-container">
+                Results:
+                <pre id="ascii-output" class="ascii-output"></pre>
+            </div>
             <button class="btn" id = "copy-button" type = "submit">
                 <img src="resources/copy.png" alt="Copy icon" title="Copy to clipboard">
             </button>

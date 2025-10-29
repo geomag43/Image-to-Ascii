@@ -1,6 +1,7 @@
 // --- Get all the DOM elements ---
 const imageLoader = document.getElementById('image-loader');
 const canvas = document.getElementById('image-canvas');
+const fakeCanvas = document.getElementById('fake-canvas');
 const ctx = canvas.getContext('2d');
 const asciiOutput = document.getElementById('ascii-output');
 const generateButton = document.getElementById('generate-button');
@@ -14,6 +15,9 @@ const verticalStretchInput = document.getElementById('vertical-stretch-input');
 const negativeCheckbox = document.getElementById('negative-checkbox');
 const lineWidthSlider = document.getElementById('line-width-slider');
 const lineWidthInput = document.getElementById('line-width-input');
+const presetpastebin = document.getElementById('preset-pastebin');
+const presetwykop = document.getElementById('preset-wykop');
+const charCountDisplay = document.getElementById('charCount');
 
 
 // --- Character maps ---
@@ -159,6 +163,12 @@ function convertImageToAscii() {
     ctx.drawImage(loadedImage, 0, 0, newWidth, newHeight);
     console.log(`Image drawn to canvas at ${newWidth}x${newHeight}`);
 
+    //draw the image to the fake canvas for preview
+    fakeCanvas.width = loadedImage.width;
+    fakeCanvas.height = loadedImage.height;
+    const fctx = fakeCanvas.getContext('2d');
+    fctx.drawImage(loadedImage, 0, 0, loadedImage.width, loadedImage.height);
+
     // --- PIXEL-TO-ASCII LOGIC ---
 
     // get the right ramp
@@ -201,10 +211,18 @@ function convertImageToAscii() {
         }
     }
 
-    // Set the text content ONCE. (Don't do it inside the loop, too slow)
+    // Set the text content ONCE. 
     asciiOutput.textContent = asciiArt;
     console.log("ASCII Art Generated!");
+
+
+    let charCount = newHeight * newWidth;
+    console.log(`Character count: ${charCount}`);
+    charCountDisplay.textContent = `Chars: ${charCount}`;
+    
 }
+
+
 
 // --- All the other listeners ---
 
@@ -248,5 +266,39 @@ symbolsMapSelect.addEventListener('change', () => {
     // update the preview text
     updateSymbolsPreview();
     // regen
+    convertImageToAscii();
+}); 
+
+presetpastebin.addEventListener('click', () => {
+    asciiOutput.classList.toggle('pastebin-output');
+    lineHeightInput.value = 21;
+    lineHeightSlider.value = 21; 
+    asciiOutput.style.lineHeight = '21px';
+    stretchValue = 0.35;
+    verticalStretchInput.value = stretchValue;
+    verticalStretchSlider.value = stretchValue;
+    scalemode = 'manual';
+    scaleModeSelect.value = scalemode;
+    maxWidth = 135;
+    lineWidthInput.value = maxWidth;
+    lineWidthSlider.value = maxWidth;
+    convertImageToAscii();
+});
+
+presetwykop.addEventListener('click', () => {
+    asciiOutput.classList.toggle('wykop-output');
+    lineHeightInput.value = 20;
+    lineHeightSlider.value = 20; 
+    asciiOutput.style.lineHeight = '20px';
+    stretchValue = 0.35;
+    verticalStretchInput.value = stretchValue;
+    verticalStretchSlider.value = stretchValue;
+    scalemode = 'manual';
+    scaleModeSelect.value = scalemode;
+    maxWidth = 87;
+    lineWidthSlider.disabled = false;
+    lineWidthInput.disabled = false;    
+    lineWidthInput.value = maxWidth;
+    lineWidthSlider.value = maxWidth;
     convertImageToAscii();
 });

@@ -36,18 +36,48 @@ body {
 
 
 
-
-
-#ascii-output {
-    color: #ebc856;
-    line-height: 1;
-    font-family: "consolas", monospace;
-    font-size: 13px;
-    /* Small font to fit more art */
-  
-    /* Squish lines together vertically */
-    letter-spacing: 1;
+.main-layout {
+  display: flex;
+  flex-direction: column; 
+  gap: 20px;            
 }
+
+/* Base style for the left panel (applies on all screen sizes) */
+.controls-panel {
+  padding: 15px;
+  padding-top: 0px;
+  border: 1px solid #507aee;
+  border-radius: 8px;
+  box-shadow: #0b1122 0px 14px 18px 0px;
+
+}
+
+/* Base style for the right panel (applies on all screen sizes) */
+.output-panel {
+  padding: 15px;
+  padding-top: 0px;
+  border: 1px solid #507aee;
+  border-radius: 8px;
+  box-shadow: #0b1122 0px 14px 18px 0px;
+}
+
+/* This media query applies ONLY when the window is 1850px or wider */
+@media (min-width: 1850px) {
+  .main-layout {
+    flex-direction: row; 
+  }
+
+  .controls-panel {
+    flex: 1;            
+    min-width: 400px;  
+    max-width: 400px; 
+  }
+
+  .output-panel {
+    flex: 2;            
+  }
+}
+
 
 
 #sizer{
@@ -55,32 +85,21 @@ body {
 }
 
 
-/* This CSS creates the side-by-side layout */
-        .main-layout {
-            display: flex; /* Arranges children (controls and output) in a row */
-            flex-wrap: wrap; /* Allows items to wrap on small screens */
-            gap: 20px;       /* Adds spacing between the left and right panels */
-        }
 
-        /* Style for the left panel */
-        .controls-panel {
-            flex: 1; /* Allows the panel to grow */
-            min-width: 300px; /* Ensures it doesn't get too small */
-            padding: 15px;
-            border: 1px solid #507aee;
-            border-radius: 8px;
-            box-shadow: #0b1122 0px 14px 18px 0px;
-
-        }
-
-        /* Style for the right panel */
-        .output-panel {
-            flex: 2; /* Allows this panel to grow, taking up more space */
-            padding: 15px;
-            border: 1px solid #507aee;
-            border-radius: 8px;
-            box-shadow: #0b1122 0px 14px 18px 0px;
-        }
+        .subtitle{
+            position: relative;
+            display: block;
+            font-size: 2em;
+            margin-block-start: 1em;
+            margin-block-end: 0.67em;
+            margin-inline-start: 0px;
+            margin-inline-end: 0px;
+            width: 100%;
+            justify-self: center;
+            text-align: center;
+            font-weight: bold;
+            unicode-bidi: isolate;
+         }
 
         /* Style for your controls table to make it look neater */
         #selector {
@@ -103,25 +122,60 @@ body {
         }
 
         /* Give the canvas a visible style */
-        #image-canvas {
+        #image-canvas{
+            display: none; /* Hide the actual canvas */
+        }
+
+        #fake-canvas {
             border: 1px solid #507aee;
             border-radius: 20px;
             box-shadow: #507aee 0px 0px 8px 0px;
-            
-            /* You'll likely set width/height with JavaScript */
             max-width: 100%; 
         }
 
         /* Style for the output <pre> tag */
 
+        .file-input {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Optional: This vertically centers the items */
+            justify-content: center;;
+            gap: 25px;          /* Optional: This adds some space between them */
+          
+        }
+
+        .image-loader-container{
+            width: 256px;
+            height: 30px;
+            align-items: center;
+      }
 
         /* Make the file input and button look consistent */
         #image-loader, #generate-btn {
             display: block;
-            width: 100%;
+            width: auto;
             padding: 10px;
-            box-sizing: border-box; /* Ensures padding doesn't break width */
+            box-sizing: border-box; 
             margin-bottom: 10px;
+            border: 1px solid #507aee;
+            border-radius: 20px;
+            box-shadow: #507aee 0px 0px 8px 0px;
+            max-width: 100%; 
+        }
+
+        #image-loader::file-selector-button {
+            background-color: #0d2055;
+            color: rgb(235, 200, 86);
+            font-family: 'Calibri', Courier, monospace;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            box-shadow: #0b1122 0px 4px 8px 0px;
+            padding: 3px;
+            height: 1.5em;
+            width: 100px;
+            border-radius: 10px;
+            margin-bottom: 0.3em;
         }
 
 #line-height-slider{
@@ -190,16 +244,19 @@ body {
 
 
 
+canvas{
+    height: 140px;
+}
+.canvas-container{
+    width: 256px;
+    height: 140px;
+    margin-top: 10px;
+}
+
 .num {
     width: 50%;
 }
 
-.file-input {
-  display: flex;
-  align-items: center; /* Optional: This vertically centers the items */
-  justify-content: center;;
-  gap: 20px;          /* Optional: This adds some space between them */
-}
 
 .preset{
     display: flex;
@@ -243,3 +300,82 @@ body {
     padding-top: 5px;
 }
 
+#charcounter-container{
+    position: absolute;
+    width: 100px;
+    justify-self: left;
+    justify-content: left;
+    text-align: center;
+    margin-bottom: -10px;
+    margin-top: 10px;
+    display: flex;
+}
+#charCount{
+    position:absolute;
+    color: #ebc856;
+    font-family: 'Calibri', Courier, monospace;
+    justify-self: left;
+    width: 100px;
+}
+
+
+/* Output Panel Styles */
+
+.ascii-output {
+    position: relative;
+    color: #ebc856;
+    line-height: 1;
+    font-family: "consolas", monospace;
+    font-size: 13px;
+    /* Small font to fit more art */
+  
+    /* Squish lines together vertically */
+    letter-spacing: 1;
+}
+
+
+.pastebin-output{
+    background-color: #2b2b2b;
+    border: 1px solid #333;
+    color: rgb(221, 221, 221);
+    border-radius: 3px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+    font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, monospace, serif;
+    font-size: 1em;
+    line-height: 21px;
+    width: 100%;
+    margin: 0;
+    padding: 8px 12px;
+    overflow-wrap: break-word;
+    tab-size: 4;
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    -webkit-tab-size: 4;
+}
+
+.wykop-output{
+    background-color: #2a2a2c;
+    border: 1px solid #333;
+    color: #c1c1c3;
+    border-radius: 3px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+    font-family: monospace;
+    font-size: 13px;
+    line-height: 21px;
+    width: 100%;
+    margin: 0;
+    padding: 8px 12px;
+    overflow-wrap: break-word;
+    tab-size: 4;
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    -webkit-tab-size: 4;
+}
